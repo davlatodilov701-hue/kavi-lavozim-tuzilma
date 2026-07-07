@@ -329,7 +329,7 @@
         {
           "title": "HR direktori",
           "employee": {
-            "name": "Shohjahon Sanaqulov",
+            "name": "Shohjahon",
             "phone": "+998 90 444 55 01",
             "filial": "Bosh Ofis (Tashkent City)",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:07:03.874Z"
+    "updatedAt": "2026-07-07T11:08:15.788Z"
   }
 }
