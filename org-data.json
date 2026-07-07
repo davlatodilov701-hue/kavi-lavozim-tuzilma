@@ -31,7 +31,7 @@
         {
           "title": "Sotuv direktori",
           "employee": {
-            "name": "Malika Qodirova",
+            "name": "Vohid Mahmadaliyev",
             "phone": "+998 90 111 22 01",
             "filial": "Bosh Ofis (Tashkent City)",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:42:02.889Z"
+    "updatedAt": "2026-07-07T11:42:17.151Z"
   }
 }
