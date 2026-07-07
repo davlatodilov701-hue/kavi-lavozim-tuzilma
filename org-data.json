@@ -131,7 +131,7 @@
         {
           "title": "Taminot direktori",
           "employee": {
-            "name": "Farrux Mo'minov",
+            "name": "Azizbek taminot",
             "phone": "+998 90 222 33 01",
             "filial": "Markaziy Ombor",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:16:28.820Z"
+    "updatedAt": "2026-07-07T11:18:45.648Z"
   }
 }
