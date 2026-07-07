@@ -2,7 +2,7 @@
   "ceo": {
     "title": "BOSH IJROCHI DIREKTOR (CEO)",
     "employee": {
-      "name": "Alisher Umarov",
+      "name": "Doniyor Odilov",
       "phone": "+998 90 999 11 11",
       "filial": "Bosh Ofis (Tashkent City)",
       "status": "Faol xizmatda"
@@ -502,7 +502,7 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T19:02:19.819Z"
+    "updatedAt": "2026-07-07T19:02:36.411Z"
   },
   "rules": "Bu yerga kompaniyaning ichki tartib-qoidalari joylashtiriladi.\n\nAdmin ushbu matnni istalgan vaqtda \"Admin kirish\" orqali tahrirlashi mumkin — masalan ish tartibi, kiyinish qoidalari, ta'til tartibi, xavfsizlik yo'riqnomasi va boshqa ichki hujjatlar."
 }
