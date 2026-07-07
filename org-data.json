@@ -230,7 +230,7 @@
         {
           "title": "Moliya direktori",
           "employee": {
-            "name": "Abdurashid Karimov",
+            "name": "Asadbek",
             "phone": "+998 90 333 44 01",
             "filial": "Bosh Ofis (Tashkent City)",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:22:38.267Z"
+    "updatedAt": "2026-07-07T11:23:38.366Z"
   }
 }
