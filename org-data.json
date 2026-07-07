@@ -249,7 +249,7 @@
         {
           "title": "Bosh buxgalter",
           "employee": {
-            "name": "Oygul Nazarova",
+            "name": "Mahmudbek",
             "phone": "+998 90 333 44 02",
             "filial": "Bosh Ofis (Tashkent City)",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:23:38.366Z"
+    "updatedAt": "2026-07-07T11:23:49.536Z"
   }
 }
