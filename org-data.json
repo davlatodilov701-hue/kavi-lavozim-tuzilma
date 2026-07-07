@@ -50,7 +50,7 @@
         {
           "title": "Huzur sotuv menejeri",
           "employee": {
-            "name": "Jasur Aliyev",
+            "name": "Islombek",
             "phone": "+998 90 111 22 02",
             "filial": "Chilonzor filiali",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:10:53.764Z"
+    "updatedAt": "2026-07-07T11:12:06.559Z"
   }
 }
