@@ -50,7 +50,7 @@
         {
           "title": "Huzur sotuv menejeri",
           "employee": {
-            "name": "ISlom",
+            "name": "Muhammad aka",
             "phone": "+998 90 111 22 02",
             "filial": "Chilonzor filiali",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:13:14.938Z"
+    "updatedAt": "2026-07-07T11:14:27.050Z"
   }
 }
