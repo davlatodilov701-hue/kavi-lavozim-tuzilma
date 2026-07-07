@@ -50,7 +50,7 @@
         {
           "title": "Huzur sotuv menejeri",
           "employee": {
-            "name": "Muhammad aka",
+            "name": "Islom",
             "phone": "+998 90 111 22 02",
             "filial": "Chilonzor filiali",
             "status": "Faol xizmatda"
@@ -131,7 +131,7 @@
         {
           "title": "Taminot direktori",
           "employee": {
-            "name": "Zaxriddin uka",
+            "name": "Farrux Mo'minov",
             "phone": "+998 90 222 33 01",
             "filial": "Markaziy Ombor",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:14:38.042Z"
+    "updatedAt": "2026-07-07T11:15:55.264Z"
   }
 }
