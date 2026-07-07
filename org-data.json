@@ -266,7 +266,7 @@
         {
           "title": "Moliyaviy tahlilchi",
           "employee": {
-            "name": "Sardor Ahmedov",
+            "name": "Sardor",
             "phone": "+998 90 333 44 03",
             "filial": "Bosh Ofis (Tashkent City)",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:23:49.536Z"
+    "updatedAt": "2026-07-07T11:23:56.190Z"
   }
 }
