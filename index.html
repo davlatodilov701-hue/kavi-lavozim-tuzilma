@@ -301,6 +301,7 @@
     </div>
   </div>
   <div class="cloud-pill" id="cloudPill"><span class="dot" id="cloudDot"></span><span id="cloudLabel">Yuklanmoqda…</span></div>
+  <button class="btn btn-ghost btn-sm" id="refreshBtn" title="Ma'lumotni qayta yuklash">🔄 Yangilash</button>
   <div class="search-wrap">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke="#555" stroke-width="2"/><path d="M21 21l-4-4" stroke="#555" stroke-width="2" stroke-linecap="round"/></svg>
     <input id="searchInput" type="text" placeholder="Ism yoki lavozimni qidiring">
@@ -475,8 +476,10 @@ else if(GITHUB_INFO) STORAGE_MODE = "github";
 
 function ghToken(){ return localStorage.getItem("gh-pat") || ""; }
 function ghApiUrl(){ return `https://api.github.com/repos/${GITHUB_INFO.owner}/${GITHUB_INFO.repo}/contents/${GITHUB_DATA_PATH}`; }
-function ghRawUrl(){ return `https://raw.githubusercontent.com/${GITHUB_INFO.owner}/${GITHUB_INFO.repo}/${GITHUB_BRANCH}/${GITHUB_DATA_PATH}?t=${Date.now()}`; }
 
+function base64ToUtf8(b64){
+  return decodeURIComponent(escape(atob(b64.replace(/\n/g, ""))));
+}
 function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
 
 /* ================== STORAGE HELPERS ================== */
@@ -491,9 +494,13 @@ async function loadData(){
   }
   if(STORAGE_MODE === "github"){
     try{
-      const res = await fetch(ghRawUrl(), {cache:"no-store"});
+      const res = await fetch(ghApiUrl() + `?ref=${GITHUB_BRANCH}`, {
+        cache: "no-store",
+        headers: {"Accept":"application/vnd.github+json"}
+      });
       if(res.ok){
-        const text = await res.text();
+        const json = await res.json();
+        const text = base64ToUtf8(json.content);
         return JSON.parse(text);
       }
     }catch(e){ /* file may not exist yet — use defaults until an admin saves once */ }
@@ -881,10 +888,22 @@ document.getElementById("updateUrlBtn").addEventListener("click", ()=>{
 document.getElementById("printBtn").addEventListener("click", ()=>window.print());
 
 /* ================== INIT ================== */
+async function refreshFromCloud(){
+  if(STORAGE_MODE === "local") return; // nothing to pull for local-only mode
+  const fresh = await loadData();
+  DATA = fresh;
+  renderAll();
+}
+document.getElementById("refreshBtn").addEventListener("click", refreshFromCloud);
+
 (async function init(){
   DATA = await loadData();
   renderAll();
   renderQr();
+  if(STORAGE_MODE !== "local"){
+    // keep an open tab reasonably fresh without requiring a manual reload or rescan
+    setInterval(refreshFromCloud, 45000);
+  }
 })();
 </script>
 </body>
