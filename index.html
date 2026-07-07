@@ -125,6 +125,8 @@
     width:12px;height:12px;border-radius:50%;
     background:#22c55e; border:2px solid #fff;
   }
+  .avatar.has-photo{padding:0; overflow:hidden;}
+  .avatar.has-photo img{width:100%;height:100%;object-fit:cover;border-radius:50%;}
   .ceo-card .avatar{width:76px;height:76px; font-size:13.5px; border-color:var(--ceo);}
   .pos-title{font-weight:800; font-size:14px; margin:2px 0;}
   .emp-name{font-weight:700; font-size:13.5px; margin:2px 0;}
@@ -185,6 +187,11 @@
   .pos-card .fl{font-size:10.5px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   .pos-card.dim{opacity:.3;}
   .pos-card.hit{outline:2px solid #16a34a; outline-offset:1px;}
+  .add-pos-card{
+    border-style:dashed !important; background:transparent; justify-content:center;
+    cursor:pointer; padding:10px 9px;
+  }
+  .add-pos-card:hover{background:#f8f9fc;}
 
   /* QR section */
   .qr-section{
@@ -351,6 +358,14 @@
     </div>
   </div>
 
+  <div class="qr-section" id="rulesSection" style="margin-top:16px;">
+    <div style="flex:1;min-width:240px;">
+      <h3 style="margin:0 0 6px;font-size:16px;">📋 Ichki tartib-qoida</h3>
+      <p style="margin:0;font-size:13px;color:var(--muted);">Kompaniyaning ichki tartib-qoidalari va yo'riqnomasi bilan tanishing.</p>
+    </div>
+    <button class="btn btn-primary" id="openRulesBtn">Ichki tartib-qoidani ochish</button>
+  </div>
+
   <footer class="note" id="lastUpdated"></footer>
 </div>
 
@@ -448,7 +463,8 @@ const DEFAULTS = {
          tasks:["Reklama kampaniyalarini ishga tushirish","Reklama byudjetini nazorat qilish","Natijalar bo'yicha hisobot tayyorlash"], apps:["Meta Ads","Google Ads"]}
       ]}
   ],
-  meta:{updatedAt:null}
+  meta:{updatedAt:null},
+  rules:"Bu yerga kompaniyaning ichki tartib-qoidalari joylashtiriladi.\n\nAdmin ushbu matnni istalgan vaqtda \"Admin kirish\" orqali tahrirlashi mumkin — masalan ish tartibi, kiyinish qoidalari, ta'til tartibi, xavfsizlik yo'riqnomasi va boshqa ichki hujjatlar."
 };
 
 /* ================== STATE ================== */
@@ -601,6 +617,18 @@ function initialsCircleText(name){
   const first = (name||"?").split(" ")[0];
   return first.length > 8 ? first.slice(0,7)+"." : first;
 }
+function avatarInner(employee){
+  if(employee && employee.photo){
+    return `<img src="${employee.photo}" alt="${employee.name||''}">`;
+  }
+  return initialsCircleText(employee ? employee.name : "");
+}
+function avatarClass(employee){
+  return employee && employee.photo ? "avatar has-photo" : "avatar";
+}
+function escapeHtml(str){
+  return (str||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
 function fmtDate(iso){
   if(!iso) return "hali saqlanmagan";
   const d = new Date(iso);
@@ -642,8 +670,9 @@ function renderCeo(){
   document.getElementById("ceoTitle").textContent = c.title;
   document.getElementById("ceoName").textContent = c.employee.name;
   document.getElementById("ceoFilial").textContent = c.employee.filial;
-  document.getElementById("ceoAvatar").innerHTML =
-    initialsCircleText(c.employee.name) + '<span class="live"></span>';
+  const av = document.getElementById("ceoAvatar");
+  av.className = avatarClass(c.employee);
+  av.innerHTML = avatarInner(c.employee) + '<span class="live"></span>';
 }
 
 function renderDepts(){
@@ -669,7 +698,7 @@ function renderDepts(){
       card.dataset.search = (p.title + " " + p.employee.name + " " + p.employee.filial).toLowerCase();
       card.innerHTML = `
         <div class="num" style="background:${dept.color}">${i+1}</div>
-        <div class="avatar" style="border-color:${dept.color}">${initialsCircleText(p.employee.name)}<span class="live"></span></div>
+        <div class="${avatarClass(p.employee)}" style="border-color:${dept.color}">${avatarInner(p.employee)}<span class="live"></span></div>
         <div class="txt">
           <div class="lbl">${p.title}</div>
           <div class="nm">${p.employee.name}</div>
@@ -679,8 +708,28 @@ function renderDepts(){
       card.addEventListener("click", ()=>openModal(dept, p));
       col.appendChild(card);
     });
+    if(isAdmin){
+      const addBtn = document.createElement("div");
+      addBtn.className = "pos-card add-pos-card";
+      addBtn.style.borderColor = dept.color;
+      addBtn.style.color = dept.color;
+      addBtn.innerHTML = `<span style="width:100%;text-align:center;font-weight:800;font-size:12.5px;">+ Lavozim qo'shish</span>`;
+      addBtn.addEventListener("click", ()=>addPosition(dept));
+      col.appendChild(addBtn);
+    }
     grid.appendChild(col);
   });
+}
+
+async function addPosition(dept){
+  const newPos = {
+    title: "Yangi lavozim",
+    employee:{name:"Yangi xodim", phone:"", filial:"", status:"Faol xizmatda"},
+    tasks:[], apps:[]
+  };
+  dept.positions.push(newPos);
+  await saveData();
+  openModal(dept, newPos);
 }
 
 function applySearch(){
@@ -712,7 +761,7 @@ function openModal(dept, pos){
       </div>
       <div class="modal-body">
         <div class="emp-box">
-          <div class="avatar" style="border-color:${color}">${initialsCircleText(pos.employee.name)}</div>
+          <div class="${avatarClass(pos.employee)}" style="border-color:${color}" id="empBoxAvatar">${avatarInner(pos.employee)}</div>
           <div>
             <div style="font-size:11px;color:var(--muted);font-weight:700;">USHBU LAVOZIMDAGI XODIM</div>
             <div style="font-weight:800;font-size:14.5px;">${pos.employee.name}</div>
@@ -737,9 +786,17 @@ function openModal(dept, pos){
   overlay.addEventListener("click", (e)=>{ if(e.target===overlay) overlay.remove(); });
 
   if(isAdmin){
+    let pendingPhoto = null;   // dataURL of a newly chosen photo, staged until Saqlash
+    let photoRemoved = false;  // true if admin chose to remove the existing photo
     const area = overlay.querySelector("#adminEditArea");
     area.innerHTML = `
       <h4 class="section-lbl">✏️ Tahrirlash (Admin)</h4>
+      <label class="edit-label">Rasm (ixtiyoriy)</label>
+      <div style="display:flex;align-items:center;gap:10px;margin-top:4px;">
+        <div class="${avatarClass(pos.employee)}" id="photoPreview" style="width:44px;height:44px;font-size:9px;margin:0;border-color:${color}">${avatarInner(pos.employee)}</div>
+        <input type="file" accept="image/*" id="edPhotoInput" style="font-size:12px;max-width:180px;">
+        <button type="button" class="btn btn-ghost btn-sm" id="removePhotoBtn" style="${pos.employee.photo ? '' : 'display:none;'}">O'chirish</button>
+      </div>
       <label class="edit-label">Xodim ismi</label>
       <input class="edit-field" id="edName" value="${pos.employee.name}">
       <label class="edit-label">Telefon</label>
@@ -753,28 +810,87 @@ function openModal(dept, pos){
         <option ${pos.employee.status==="Bo'sh lavozim"?"selected":""}>Bo'sh lavozim</option>
       </select>
       <label class="edit-label">Vazifalar (har birini yangi qatorga yozing)</label>
-      <textarea class="edit-field" id="edTasks">${pos.tasks.join("\\n")}</textarea>
+      <textarea class="edit-field" id="edTasks">${pos.tasks.join("\n")}</textarea>
       <label class="edit-label">Dasturlar (vergul bilan ajrating)</label>
       <input class="edit-field" id="edApps" value="${pos.apps.join(", ")}">
       <div class="save-row">
         <button class="btn btn-primary" id="saveBtn">💾 Saqlash</button>
         <button class="btn btn-ghost" id="cancelBtn">Bekor qilish</button>
+        ${!isCeo ? '<button class="btn btn-ghost" id="delBtn" style="margin-left:auto;color:#dc2626;border-color:#fca5a5;">🗑️ O\'chirish</button>' : ''}
       </div>
     `;
+
+    area.querySelector("#edPhotoInput").addEventListener("change", async (e)=>{
+      const file = e.target.files[0];
+      if(!file) return;
+      try{
+        const dataUrl = await resizeImageFile(file);
+        pendingPhoto = dataUrl;
+        photoRemoved = false;
+        const prev = area.querySelector("#photoPreview");
+        prev.classList.add("has-photo");
+        prev.innerHTML = `<img src="${dataUrl}">`;
+        area.querySelector("#removePhotoBtn").style.display = "";
+      }catch(err){ alert("Rasmni o'qishda xatolik yuz berdi."); }
+    });
+    area.querySelector("#removePhotoBtn").addEventListener("click", ()=>{
+      pendingPhoto = null;
+      photoRemoved = true;
+      const prev = area.querySelector("#photoPreview");
+      prev.classList.remove("has-photo");
+      prev.innerHTML = initialsCircleText(document.getElementById("edName").value);
+      area.querySelector("#removePhotoBtn").style.display = "none";
+    });
+
     area.querySelector("#saveBtn").addEventListener("click", async ()=>{
       pos.employee.name = document.getElementById("edName").value.trim() || pos.employee.name;
       pos.employee.phone = document.getElementById("edPhone").value.trim();
       pos.employee.filial = document.getElementById("edFilial").value.trim();
       pos.employee.status = document.getElementById("edStatus").value;
-      pos.tasks = document.getElementById("edTasks").value.split("\\n").map(s=>s.trim()).filter(Boolean);
+      pos.tasks = document.getElementById("edTasks").value.split("\n").map(s=>s.trim()).filter(Boolean);
       pos.apps = document.getElementById("edApps").value.split(",").map(s=>s.trim()).filter(Boolean);
+      if(photoRemoved){ delete pos.employee.photo; }
+      else if(pendingPhoto){ pos.employee.photo = pendingPhoto; }
       await saveData();
       overlay.remove();
     });
     area.querySelector("#cancelBtn").addEventListener("click", ()=>overlay.remove());
+    const delBtn = area.querySelector("#delBtn");
+    if(delBtn){
+      delBtn.addEventListener("click", async ()=>{
+        if(!confirm(`"${pos.title}" lavozimini butunlay o'chirmoqchimisiz? Bu amalni ortga qaytarib bo'lmaydi.`)) return;
+        const idx = dept.positions.indexOf(pos);
+        if(idx > -1) dept.positions.splice(idx, 1);
+        await saveData();
+        overlay.remove();
+      });
+    }
   }
 }
 document.getElementById("ceoCard").addEventListener("click", ()=>openModal(null, DATA.ceo));
+
+/* ================== PHOTO HELPERS ================== */
+function resizeImageFile(file, size=220, quality=0.78){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = (e)=>{
+      const img = new Image();
+      img.onload = ()=>{
+        const canvas = document.createElement("canvas");
+        canvas.width = size; canvas.height = size;
+        const ctx = canvas.getContext("2d");
+        const minSide = Math.min(img.width, img.height);
+        const sx = (img.width - minSide) / 2, sy = (img.height - minSide) / 2;
+        ctx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+        resolve(canvas.toDataURL("image/jpeg", quality));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
 
 /* ================== ADMIN LOGIN ================== */
 function showPasswordModal(){
@@ -800,6 +916,8 @@ function showPasswordModal(){
     if(input.value === ADMIN_PASSWORD){
       isAdmin = true;
       updateAdminButton();
+      renderDepts();
+      applySearch();
       overlay.remove();
     } else {
       input.style.borderColor = "#ef4444";
@@ -839,7 +957,7 @@ function updateAdminButton(){
   }
 }
 document.getElementById("adminBtn").addEventListener("click", ()=>{
-  if(isAdmin){ isAdmin = false; updateAdminButton(); }
+  if(isAdmin){ isAdmin = false; updateAdminButton(); renderDepts(); applySearch(); }
   else { showPasswordModal(); }
 });
 
@@ -886,6 +1004,46 @@ document.getElementById("updateUrlBtn").addEventListener("click", ()=>{
   renderQr();
 });
 document.getElementById("printBtn").addEventListener("click", ()=>window.print());
+
+/* ================== INTERNAL RULES ================== */
+function openRulesModal(){
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <div class="modal" style="width:560px;">
+      <div class="modal-head" style="background:var(--ink);">
+        <button class="close">✕</button>
+        <div class="tags"><span class="chip">📋</span></div>
+        <h2>Ichki tartib-qoida</h2>
+        <div class="sub">Kompaniya xodimlari uchun qoidalar va yo'riqnoma</div>
+      </div>
+      <div class="modal-body">
+        <div id="rulesView" style="white-space:pre-wrap;font-size:13.5px;line-height:1.65;">${DATA.rules ? escapeHtml(DATA.rules) : "Hozircha tartib-qoida matni kiritilmagan."}</div>
+        <div id="rulesEditArea"></div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector(".close").addEventListener("click", ()=>overlay.remove());
+  overlay.addEventListener("click", (e)=>{ if(e.target===overlay) overlay.remove(); });
+
+  if(isAdmin){
+    const area = overlay.querySelector("#rulesEditArea");
+    area.innerHTML = `
+      <h4 class="section-lbl">✏️ Tahrirlash (Admin)</h4>
+      <textarea class="edit-field" id="edRules" style="min-height:240px;">${DATA.rules || ""}</textarea>
+      <div class="save-row">
+        <button class="btn btn-primary" id="saveRulesBtn">💾 Saqlash</button>
+      </div>
+    `;
+    area.querySelector("#saveRulesBtn").addEventListener("click", async ()=>{
+      DATA.rules = document.getElementById("edRules").value;
+      await saveData();
+      overlay.remove();
+    });
+  }
+}
+document.getElementById("openRulesBtn").addEventListener("click", openRulesModal);
 
 /* ================== INIT ================== */
 async function refreshFromCloud(){
