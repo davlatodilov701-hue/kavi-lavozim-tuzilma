@@ -131,7 +131,7 @@
         {
           "title": "Taminot direktori",
           "employee": {
-            "name": "Farrux Mo'minov",
+            "name": "Shahzod Qo'chqorov",
             "phone": "+998 90 222 33 01",
             "filial": "Markaziy Ombor",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:41:16.931Z"
+    "updatedAt": "2026-07-07T11:41:38.859Z"
   }
 }
