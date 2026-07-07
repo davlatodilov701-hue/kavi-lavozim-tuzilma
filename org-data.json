@@ -329,7 +329,7 @@
         {
           "title": "HR direktori",
           "employee": {
-            "name": "Dilorom Ismoilova",
+            "name": "Shohjahon Sanaqulov",
             "phone": "+998 90 444 55 01",
             "filial": "Bosh Ofis (Tashkent City)",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:06:03.468Z"
+    "updatedAt": "2026-07-07T11:07:03.874Z"
   }
 }
