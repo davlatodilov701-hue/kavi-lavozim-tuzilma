@@ -1,0 +1,508 @@
+{
+  "ceo": {
+    "title": "BOSH IJROCHI DIREKTOR (CEO)",
+    "employee": {
+      "name": "Alisher Umarov",
+      "phone": "+998 90 999 11 11",
+      "filial": "Bosh Ofis (Tashkent City)",
+      "status": "Faol xizmatda"
+    },
+    "tasks": [
+      "Kompaniyaning strategik maqsadlari va rejasini belgilash",
+      "Bo'lim rahbarlarining faoliyatini va KPI ko'rsatkichlarini nazorat qilish",
+      "Kompaniyaning moliyaviy o'sishini hamda investitsiyalarni muvofiqlashtirish",
+      "Barcha bo'lim rahbarlari bilan asosiy qarorlarni kelishish"
+    ],
+    "apps": [
+      "Dashboard",
+      "Google Analytics",
+      "KPI Tracker"
+    ]
+  },
+  "departments": [
+    {
+      "id": "sotuv",
+      "name": "SOTUV",
+      "tag": "SAVDO VA MIJOZLAR",
+      "color": "var(--sotuv)",
+      "soft": "var(--sotuv-soft)",
+      "icon": "💰",
+      "positions": [
+        {
+          "title": "Sotuv direktori",
+          "employee": {
+            "name": "Malika Qodirova",
+            "phone": "+998 90 111 22 01",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Oylik sotuv rejasini tuzish va nazorat qilish",
+            "Mijozlar bilan yirik bitimlarni yakunlash",
+            "Sotuv jamoasi KPI ko'rsatkichlarini baholash"
+          ],
+          "apps": [
+            "CRM",
+            "Excel",
+            "Power BI"
+          ]
+        },
+        {
+          "title": "Huzur sotuv menejeri",
+          "employee": {
+            "name": "Jasur Aliyev",
+            "phone": "+998 90 111 22 02",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Filialdagi kunlik savdo jarayonini boshqarish",
+            "Sotuvchilar ish grafigini tuzish",
+            "Mijozlar shikoyatlarini hal qilish"
+          ],
+          "apps": [
+            "CRM",
+            "1C"
+          ]
+        },
+        {
+          "title": "Mijozlar bilan ishlash bo'yicha menejer",
+          "employee": {
+            "name": "Diyorbek Karimov",
+            "phone": "+998 90 111 22 03",
+            "filial": "Yunusobod filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Doimiy mijozlar bazasini yuritish",
+            "Mijozlar bilan uchrashuvlar tashkil qilish",
+            "Shartnomalarni rasmiylashtirish"
+          ],
+          "apps": [
+            "CRM",
+            "Telegram"
+          ]
+        },
+        {
+          "title": "Sotuvchilar",
+          "employee": {
+            "name": "Sardor & Kamola",
+            "phone": "+998 90 111 22 04",
+            "filial": "Uchtepa filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Do'konda mijozlarga xizmat ko'rsatish",
+            "Mahsulotlarni tavsiya qilish",
+            "Vitrina va tovar qoldig'ini nazorat qilish"
+          ],
+          "apps": [
+            "POS tizimi"
+          ]
+        },
+        {
+          "title": "Kassa xodimi",
+          "employee": {
+            "name": "Zuhra To'rayeva",
+            "phone": "+998 90 111 22 05",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Kassa orqali to'lovlarni qabul qilish",
+            "Kunlik kassa hisobotini topshirish",
+            "Chek va kvitansiyalarni rasmiylashtirish"
+          ],
+          "apps": [
+            "POS tizimi",
+            "1C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "taminot",
+      "name": "TA'MINOT",
+      "tag": "LOGISTIKA VA XARID",
+      "color": "var(--taminot)",
+      "soft": "var(--taminot-soft)",
+      "icon": "🚚",
+      "positions": [
+        {
+          "title": "Taminot direktori",
+          "employee": {
+            "name": "Farrux Mo'minov",
+            "phone": "+998 90 222 33 01",
+            "filial": "Markaziy Ombor",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Yetkazib beruvchilar bilan shartnoma tuzish",
+            "Taminot byudjetini rejalashtirish",
+            "Logistika xarajatlarini optimallashtirish"
+          ],
+          "apps": [
+            "1C",
+            "Excel"
+          ]
+        },
+        {
+          "title": "Xarid qilish menejeri",
+          "employee": {
+            "name": "Olimjon Hasanov",
+            "phone": "+998 90 222 33 02",
+            "filial": "Markaziy ombor",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Mahsulot xaridi uchun buyurtma berish",
+            "Narxlarni taqqoslash va tanlov o'tkazish",
+            "Yetkazib beruvchilar bilan muzokara"
+          ],
+          "apps": [
+            "1C",
+            "Excel"
+          ]
+        },
+        {
+          "title": "Logistika boshlig'i",
+          "employee": {
+            "name": "Javlon Yo'ldoshev",
+            "phone": "+998 90 222 33 03",
+            "filial": "Markaziy ombor",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Tashish marshrutlarini rejalashtirish",
+            "Transport xodimlarini boshqarish",
+            "Yetkazib berish muddatlarini nazorat qilish"
+          ],
+          "apps": [
+            "Logistika tizimi",
+            "Telegram"
+          ]
+        },
+        {
+          "title": "Omborchi",
+          "employee": {
+            "name": "Akmal Rahimov",
+            "phone": "+998 90 222 33 04",
+            "filial": "Omborxona-1",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Ombordagi tovar qoldig'ini hisoblash",
+            "Kirim-chiqim hujjatlarini rasmiylashtirish",
+            "Ombor tartibini saqlash"
+          ],
+          "apps": [
+            "1C Ombor"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "moliya",
+      "name": "MOLIYA",
+      "tag": "BUXGALTERIYA",
+      "color": "var(--moliya)",
+      "soft": "var(--moliya-soft)",
+      "icon": "📊",
+      "positions": [
+        {
+          "title": "Moliya direktori",
+          "employee": {
+            "name": "Abdurashid Karimov",
+            "phone": "+998 90 333 44 01",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Kompaniya byudjetini shakllantirish",
+            "Moliyaviy hisobotlarni tasdiqlash",
+            "Investitsiya loyihalarini baholash"
+          ],
+          "apps": [
+            "1C",
+            "Excel",
+            "Power BI"
+          ]
+        },
+        {
+          "title": "Bosh buxgalter",
+          "employee": {
+            "name": "Oygul Nazarova",
+            "phone": "+998 90 333 44 02",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Buxgalteriya hisobotlarini shakllantirish",
+            "Soliq deklaratsiyalarini topshirish",
+            "Ish haqi hisob-kitoblarini nazorat qilish"
+          ],
+          "apps": [
+            "1C Buxgalteriya"
+          ]
+        },
+        {
+          "title": "Moliyaviy tahlilchi",
+          "employee": {
+            "name": "Sardor Ahmedov",
+            "phone": "+998 90 333 44 03",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Moliyaviy ko'rsatkichlarni tahlil qilish",
+            "Xarajatlar samaradorligini baholash",
+            "Boshqaruvga hisobot tayyorlash"
+          ],
+          "apps": [
+            "Excel",
+            "Power BI"
+          ]
+        },
+        {
+          "title": "G'aznachi (pulga javobgar)",
+          "employee": {
+            "name": "Anvar Azimov",
+            "phone": "+998 90 333 44 04",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Naqd pul aylanmasini nazorat qilish",
+            "Kassa qoldig'ini kunlik tekshirish",
+            "To'lovlarni amalga oshirish"
+          ],
+          "apps": [
+            "1C",
+            "Bank-Klient"
+          ]
+        },
+        {
+          "title": "Buxgalter",
+          "employee": {
+            "name": "Aziza Vahobova",
+            "phone": "+998 90 333 44 05",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Birlamchi hujjatlarni kiritish",
+            "Kontragentlar bilan hisob-kitobni yuritish",
+            "Hisob-fakturalarni rasmiylashtirish"
+          ],
+          "apps": [
+            "1C Buxgalteriya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "hr",
+      "name": "HR",
+      "tag": "KADRLAR TIZIMI",
+      "color": "var(--hr)",
+      "soft": "var(--hr-soft)",
+      "icon": "👥",
+      "positions": [
+        {
+          "title": "HR direktori",
+          "employee": {
+            "name": "Dilorom Ismoilova",
+            "phone": "+998 90 444 55 01",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Kadrlar siyosatini ishlab chiqish",
+            "Xodimlarni rag'batlantirish tizimini boshqarish",
+            "Bo'lim menejerlari bilan muvofiqlashtirish"
+          ],
+          "apps": [
+            "HR tizimi",
+            "Excel"
+          ]
+        },
+        {
+          "title": "Kadrlar menejeri",
+          "employee": {
+            "name": "Temur Po'latov",
+            "phone": "+998 90 444 55 02",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Xodimlar shtatini yuritish",
+            "Mehnat shartnomalarini rasmiylashtirish",
+            "Ta'til va bemorlik varaqalarini hisoblash"
+          ],
+          "apps": [
+            "HR tizimi"
+          ]
+        },
+        {
+          "title": "Xodimlar ta'limi va rivojlanishi",
+          "employee": {
+            "name": "Mohira Ergasheva",
+            "phone": "+998 90 444 55 03",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Yangi xodimlar uchun treninglar tashkil qilish",
+            "Malaka oshirish dasturlarini rejalashtirish",
+            "Xodimlar samaradorligini baholash"
+          ],
+          "apps": [
+            "Zoom",
+            "Google Docs"
+          ]
+        },
+        {
+          "title": "Ishga qabul qilish mutaxassisi",
+          "employee": {
+            "name": "Shoxrux Bekmurodov",
+            "phone": "+998 90 444 55 04",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Vakansiyalar bo'yicha e'lon joylashtirish",
+            "Nomzodlar bilan suhbat o'tkazish",
+            "Yangi xodimlarni moslashtirish"
+          ],
+          "apps": [
+            "HH.uz",
+            "Telegram"
+          ]
+        },
+        {
+          "title": "HR ma'muriyati",
+          "employee": {
+            "name": "Nafisa Shokirova",
+            "phone": "+998 90 444 55 05",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Xodimlar hujjatlarini arxivlash",
+            "Ichki buyruqlarni tayyorlash",
+            "Davomat jadvalini yuritish"
+          ],
+          "apps": [
+            "Excel",
+            "1C"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "marketing",
+      "name": "MARKETING",
+      "tag": "REKLAMA VA SMM",
+      "color": "var(--marketing)",
+      "soft": "var(--marketing-soft)",
+      "icon": "📣",
+      "positions": [
+        {
+          "title": "Marketing direktori (Marketolog)",
+          "employee": {
+            "name": "Kamron Alimov",
+            "phone": "+998 90 555 66 01",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Marketing strategiyasini ishlab chiqish",
+            "Reklama byudjetini taqsimlash",
+            "Brend rivojlanishini nazorat qilish"
+          ],
+          "apps": [
+            "Google Analytics",
+            "Meta Ads"
+          ]
+        },
+        {
+          "title": "Brend menejeri",
+          "employee": {
+            "name": "Sevara Usmonova",
+            "phone": "+998 90 555 66 02",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Brend identifikatsiyasini rivojlantirish",
+            "Marketing materiallarini tasdiqlash",
+            "Hamkorlar bilan brend integratsiyasi"
+          ],
+          "apps": [
+            "Canva",
+            "Figma"
+          ]
+        },
+        {
+          "title": "Marketing tahlilchisi",
+          "employee": {
+            "name": "Diyor Mansurov",
+            "phone": "+998 90 555 66 03",
+            "filial": "Bosh Ofis (Tashkent City)",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Kampaniyalar samaradorligini tahlil qilish",
+            "Bozor tadqiqotlarini o'tkazish",
+            "Raqobatchilar tahlilini yuritish"
+          ],
+          "apps": [
+            "Google Analytics",
+            "Excel"
+          ]
+        },
+        {
+          "title": "SMM mutaxassisi (SMM)",
+          "employee": {
+            "name": "Rano Rustamova",
+            "phone": "+998 90 555 66 04",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Ijtimoiy tarmoqlar kontentini rejalashtirish",
+            "Postlarni tayyorlash va joylash",
+            "Auditoriya bilan muloqotni yuritish"
+          ],
+          "apps": [
+            "Instagram",
+            "Telegram",
+            "Canva"
+          ]
+        },
+        {
+          "title": "Reklama menejeri",
+          "employee": {
+            "name": "Bekzod Toirov",
+            "phone": "+998 90 555 66 05",
+            "filial": "Chilonzor filiali",
+            "status": "Faol xizmatda"
+          },
+          "tasks": [
+            "Reklama kampaniyalarini ishga tushirish",
+            "Reklama byudjetini nazorat qilish",
+            "Natijalar bo'yicha hisobot tayyorlash"
+          ],
+          "apps": [
+            "Meta Ads",
+            "Google Ads"
+          ]
+        }
+      ]
+    }
+  ],
+  "meta": {
+    "updatedAt": "2026-07-07T18:58:10.035Z"
+  },
+  "rules": "Bu yerga kompaniyaning ichki tartib-qoidalari joylashtiriladi.\n\nAdmin ushbu matnni istalgan vaqtda \"Admin kirish\" orqali tahrirlashi mumkin — masalan ish tartibi, kiyinish qoidalari, ta'til tartibi, xavfsizlik yo'riqnomasi va boshqa ichki hujjatlar."
+}
