@@ -334,12 +334,19 @@
 
   <div class="dept-grid" id="deptGrid"></div>
 
+  <div id="fileWarning" class="storage-warning" style="display:none; margin:0 0 16px;"></div>
+
   <div class="qr-section" id="qrSection">
     <div class="qr-box"><div id="qrcode"></div></div>
     <div class="qr-info">
       <h3>📱 QR kod orqali kirish</h3>
       <p>Ushbu QR kodni skanerlang — telefon yoki kompyuterda tuzilma avtomatik ochiladi. Lavozimlar yoki xodimlar o'zgarsa ham, QR kod o'zgarmaydi: ma'lumot bulutda yangilanadi.</p>
       <div class="link-row"><span id="pageUrl"></span><button class="btn btn-ghost btn-sm" id="copyBtn">Nusxalash</button></div>
+      <label class="edit-label" style="margin-top:12px;">Sahifa manzili (URL) — agar QR ishlamasa, shu yerga hosting manzilini kiriting</label>
+      <div style="display:flex; gap:8px; margin-top:6px;">
+        <input class="edit-field" id="customUrlInput" placeholder="https://... (saytingiz manzili)" style="margin-top:0;">
+        <button class="btn btn-primary btn-sm" id="updateUrlBtn">QR yangilash</button>
+      </div>
     </div>
   </div>
 
@@ -446,33 +453,139 @@ const DEFAULTS = {
 /* ================== STATE ================== */
 let DATA = null;
 let isAdmin = false;
-let hasCloud = !!(window.storage && typeof window.storage.get === "function");
+const hasClaudeStorage = !!(window.storage && typeof window.storage.get === "function");
+const GITHUB_DATA_PATH = "org-data.json"; // JSON file kept alongside the html file in the repo
+const GITHUB_BRANCH = "main";
+
+function detectGithubRepo(){
+  // Works automatically when this page is served from GitHub Pages,
+  // e.g. https://USER.github.io/REPO/anything.html
+  const h = window.location.hostname;
+  if(!h.endsWith(".github.io")) return null;
+  const owner = h.replace(".github.io", "");
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  if(parts.length === 0) return null; // user/organization root pages (USER.github.io) have no repo segment
+  return { owner, repo: parts[0] };
+}
+const GITHUB_INFO = detectGithubRepo();
+
+let STORAGE_MODE = "local";
+if(hasClaudeStorage) STORAGE_MODE = "claude";
+else if(GITHUB_INFO) STORAGE_MODE = "github";
+
+function ghToken(){ return localStorage.getItem("gh-pat") || ""; }
+function ghApiUrl(){ return `https://api.github.com/repos/${GITHUB_INFO.owner}/${GITHUB_INFO.repo}/contents/${GITHUB_DATA_PATH}`; }
+function ghRawUrl(){ return `https://raw.githubusercontent.com/${GITHUB_INFO.owner}/${GITHUB_INFO.repo}/${GITHUB_BRANCH}/${GITHUB_DATA_PATH}?t=${Date.now()}`; }
+
+function utf8ToBase64(str){ return btoa(unescape(encodeURIComponent(str))); }
 
 /* ================== STORAGE HELPERS ================== */
 async function loadData(){
-  if(hasCloud){
+  if(STORAGE_MODE === "claude"){
     try{
       const res = await window.storage.get(STORAGE_KEY, true);
       if(res && res.value){ return JSON.parse(res.value); }
     }catch(e){ /* key not found yet, fall through to seed */ }
-    // seed shared storage the first time so every future viewer gets the same data
     try{ await window.storage.set(STORAGE_KEY, JSON.stringify(DEFAULTS), true); }catch(e){}
     return JSON.parse(JSON.stringify(DEFAULTS));
-  } else {
-    const local = localStorage.getItem(STORAGE_KEY);
-    if(local){ try{ return JSON.parse(local); }catch(e){} }
+  }
+  if(STORAGE_MODE === "github"){
+    try{
+      const res = await fetch(ghRawUrl(), {cache:"no-store"});
+      if(res.ok){
+        const text = await res.text();
+        return JSON.parse(text);
+      }
+    }catch(e){ /* file may not exist yet — use defaults until an admin saves once */ }
     return JSON.parse(JSON.stringify(DEFAULTS));
   }
+  const local = localStorage.getItem(STORAGE_KEY);
+  if(local){ try{ return JSON.parse(local); }catch(e){} }
+  return JSON.parse(JSON.stringify(DEFAULTS));
 }
+
 async function saveData(){
   DATA.meta.updatedAt = new Date().toISOString();
-  if(hasCloud){
+
+  if(STORAGE_MODE === "claude"){
     try{ await window.storage.set(STORAGE_KEY, JSON.stringify(DATA), true); }
     catch(e){ alert("Saqlashda xatolik yuz berdi. Qayta urinib ko'ring."); }
-  } else {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
+    renderAll();
+    return;
   }
+
+  if(STORAGE_MODE === "github"){
+    const token = ghToken();
+    if(!token){
+      askForGithubToken(()=>saveData());
+      return;
+    }
+    try{
+      let sha = null;
+      const getRes = await fetch(ghApiUrl(), {headers:{Authorization:`token ${token}`, "Accept":"application/vnd.github+json"}});
+      if(getRes.ok){ const j = await getRes.json(); sha = j.sha; }
+      else if(getRes.status === 401){
+        alert("GitHub token noto'g'ri yoki muddati tugagan. Qaytadan kiriting.");
+        localStorage.removeItem("gh-pat");
+        askForGithubToken(()=>saveData());
+        return;
+      }
+      const body = {
+        message: "Tashkiliy tuzilmani yangilash",
+        content: utf8ToBase64(JSON.stringify(DATA, null, 2)),
+        branch: GITHUB_BRANCH
+      };
+      if(sha) body.sha = sha;
+      const putRes = await fetch(ghApiUrl(), {
+        method:"PUT",
+        headers:{Authorization:`token ${token}`, "Accept":"application/vnd.github+json"},
+        body: JSON.stringify(body)
+      });
+      if(!putRes.ok){
+        const err = await putRes.json().catch(()=>({}));
+        alert("GitHub'ga saqlashda xatolik: " + (err.message || putRes.status));
+      }
+    }catch(e){
+      alert("Internet yoki GitHub bilan bog'lanishda xatolik yuz berdi.");
+    }
+    renderAll();
+    return;
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA));
   renderAll();
+}
+
+function askForGithubToken(onSuccess){
+  const overlay = document.createElement("div");
+  overlay.className = "overlay";
+  overlay.innerHTML = `
+    <div class="modal pw-modal" style="width:440px;">
+      <div class="modal-body">
+        <h3 style="margin-top:0;">🔑 GitHub bilan bog'lash</h3>
+        <p style="font-size:12.5px;color:var(--muted);line-height:1.5;">
+          Ma'lumotlarni barcha qurilmalarga tarqatish uchun bitta martalik GitHub token kerak (faqat shu brauzerda saqlanadi, boshqalarga ko'rinmaydi).<br><br>
+          <b>Qanday olish:</b> GitHub → yuqori o'ng burchakdagi profil rasmi → <b>Settings</b> → chapda pastda <b>Developer settings</b> → <b>Personal access tokens</b> → <b>Tokens (classic)</b> → <b>Generate new token</b> → <b>repo</b> qutichasini belgilang → yarating va nusxalab shu yerga joylashtiring.
+        </p>
+        <input class="edit-field" type="password" id="ghTokenInput" placeholder="ghp_ bilan boshlanadigan token">
+        <div class="save-row">
+          <button class="btn btn-primary" id="ghOk">Saqlash</button>
+          <button class="btn btn-ghost" id="ghCancel">Bekor qilish</button>
+        </div>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  overlay.querySelector("#ghOk").addEventListener("click", ()=>{
+    const val = overlay.querySelector("#ghTokenInput").value.trim();
+    if(val){
+      localStorage.setItem("gh-pat", val);
+      overlay.remove();
+      onSuccess && onSuccess();
+    }
+  });
+  overlay.querySelector("#ghCancel").addEventListener("click", ()=>overlay.remove());
+  overlay.addEventListener("click", (e)=>{ if(e.target===overlay) overlay.remove(); });
 }
 
 /* ================== UTIL ================== */
@@ -493,22 +606,27 @@ function renderAll(){
   renderCeo();
   renderDepts();
   document.getElementById("lastUpdated").textContent =
-    "Oxirgi yangilanish: " + fmtDate(DATA.meta.updatedAt) + (hasCloud ? " · bulutda saqlanmoqda" : " · shu qurilmada saqlanmoqda");
+    "Oxirgi yangilanish: " + fmtDate(DATA.meta.updatedAt) + (STORAGE_MODE !== "local" ? " · bulutda saqlanmoqda" : " · shu qurilmada saqlanmoqda");
   applySearch();
 }
 
 function renderCloudPill(){
   const dot = document.getElementById("cloudDot");
   const label = document.getElementById("cloudLabel");
-  if(hasCloud){
+  const w = document.getElementById("storageWarning");
+  if(STORAGE_MODE === "claude"){
     dot.classList.remove("amber");
     label.textContent = "Bulut: Jonli";
+    w.style.display = "none";
+  } else if(STORAGE_MODE === "github"){
+    dot.classList.remove("amber");
+    label.textContent = `GitHub: ${GITHUB_INFO.owner}/${GITHUB_INFO.repo}`;
+    w.style.display = "none";
   } else {
     dot.classList.add("amber");
     label.textContent = "Lokal saqlash";
-    const w = document.getElementById("storageWarning");
     w.style.display = "block";
-    w.innerHTML = "⚠️ Bu sahifa hozir bulutli sinxronizatsiyasiz ishlayapti — o'zgarishlar faqat shu qurilma/brauzerda saqlanadi. Barcha xodimlar uchun umumiy, bir xil ma'lumot ko'rsatish uchun ushbu faylni Claude ilovasi ichida (artifact sifatida) oching yoki bulutli xotira ulanган hostingga joylang.";
+    w.innerHTML = "⚠️ Bu sahifa hozir bulutli sinxronizatsiyasiz ishlayapti — o'zgarishlar faqat shu qurilma/brauzerda saqlanadi. Barcha xodimlar uchun umumiy, bir xil ma'lumot ko'rsatish uchun ushbu faylni Claude ilovasi ichida (artifact sifatida) oching yoki GitHub Pages orqali joylang.";
   }
 }
 
@@ -696,6 +814,22 @@ function updateAdminButton(){
     btn.textContent = "🔒 Admin kirish";
     btn.classList.remove("btn-admin-on");
   }
+  let ghBtn = document.getElementById("ghTokenBtn");
+  if(isAdmin && STORAGE_MODE === "github"){
+    if(!ghBtn){
+      ghBtn = document.createElement("button");
+      ghBtn.id = "ghTokenBtn";
+      ghBtn.className = "btn btn-ghost btn-sm";
+      ghBtn.addEventListener("click", ()=>{
+        localStorage.removeItem("gh-pat");
+        askForGithubToken();
+      });
+      btn.insertAdjacentElement("afterend", ghBtn);
+    }
+    ghBtn.textContent = ghToken() ? "🔑 GitHub token: o'rnatilgan" : "🔑 GitHub tokenni kiritish";
+  } else if(ghBtn){
+    ghBtn.remove();
+  }
 }
 document.getElementById("adminBtn").addEventListener("click", ()=>{
   if(isAdmin){ isAdmin = false; updateAdminButton(); }
@@ -703,23 +837,46 @@ document.getElementById("adminBtn").addEventListener("click", ()=>{
 });
 
 /* ================== QR + PRINT ================== */
+const URL_OVERRIDE_KEY = "org-chart-url-override";
+
+function getQrUrl(){
+  const override = localStorage.getItem(URL_OVERRIDE_KEY);
+  return (override && override.trim()) ? override.trim() : window.location.href;
+}
+
 function renderQr(){
-  const url = window.location.href;
+  const url = getQrUrl();
   document.getElementById("pageUrl").textContent = url;
+  document.getElementById("customUrlInput").value = localStorage.getItem(URL_OVERRIDE_KEY) || "";
   document.getElementById("qrcode").innerHTML = "";
   document.getElementById("qrcodePrint").innerHTML = "";
+
+  const w = document.getElementById("fileWarning");
+  if(window.location.protocol === "file:" && !localStorage.getItem(URL_OVERRIDE_KEY)){
+    w.style.display = "block";
+    w.innerHTML = "Bu sahifa hozir kompyuteringizdagi lokal fayldan ochilgan (manzili file:// bilan boshlanadi). Bunday manzilni boshqa telefon kamerasi orqali ochib bo'lmaydi, shuning uchun skaner qilinganda ma'lumot topilmaydi. Yechim: faylni internetga joylang (Claude ichida ochib havolasini oling yoki hostingga yuklang), so'ng o'sha https havolani pastdagi maydonga kiritib QR yangilash tugmasini bosing.";
+  } else {
+    w.style.display = "none";
+  }
+
   if(window.QRCode){
-    new QRCode(document.getElementById("qrcode"), {text:url, width:180, height:180, colorDark:"#1b2233", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H});
-    new QRCode(document.getElementById("qrcodePrint"), {text:url, width:240, height:240, colorDark:"#1b2233", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H});
+    new QRCode(document.getElementById("qrcode"), {text:url, width:260, height:260, colorDark:"#1b2233", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H});
+    new QRCode(document.getElementById("qrcodePrint"), {text:url, width:320, height:320, colorDark:"#1b2233", colorLight:"#ffffff", correctLevel: QRCode.CorrectLevel.H});
   }
 }
 document.getElementById("copyBtn").addEventListener("click", ()=>{
-  navigator.clipboard.writeText(window.location.href).then(()=>{
+  navigator.clipboard.writeText(getQrUrl()).then(()=>{
     const b = document.getElementById("copyBtn");
     const old = b.textContent;
     b.textContent = "Nusxalandi ✓";
     setTimeout(()=>b.textContent = old, 1500);
   });
+});
+document.getElementById("updateUrlBtn").addEventListener("click", ()=>{
+  const val = document.getElementById("customUrlInput").value.trim();
+  if(val){ localStorage.setItem(URL_OVERRIDE_KEY, val); }
+  else { localStorage.removeItem(URL_OVERRIDE_KEY); }
+  renderQr();
 });
 document.getElementById("printBtn").addEventListener("click", ()=>window.print());
 
