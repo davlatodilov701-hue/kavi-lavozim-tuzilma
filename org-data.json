@@ -131,7 +131,7 @@
         {
           "title": "Taminot direktori",
           "employee": {
-            "name": "Azizbek",
+            "name": "Islombek uzoqov",
             "phone": "+998 90 222 33 01",
             "filial": "Markaziy Ombor",
             "status": "Faol xizmatda"
@@ -520,6 +520,6 @@
     }
   ],
   "meta": {
-    "updatedAt": "2026-07-07T11:20:30.323Z"
+    "updatedAt": "2026-07-07T11:22:38.267Z"
   }
 }
